@@ -1,0 +1,63 @@
+I"�
+<h1 id="-rabbitmq"><img src="/assets/images/icon/rabbitmq.png" alt="rabbitmq icon" class="icon-title" /> RabbitMQ</h1>
+
+<ul>
+  <li><a href="#rabbitmq-docker-실행">rabbitmq docker 실행</a></li>
+  <li><a href="#rabbitmq-management-web-접속">rabbitmq management web 접속</a>
+    <ul>
+      <li><a href="#user-생성">User 생성</a></li>
+      <li><a href="#virtual-host-생성">Virtual host 생성</a></li>
+      <li><a href="#virtual-host-permission-부여">Virtual Host Permission 부여</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p>email 발송을 위한 RabbitMQ with docker guide</p>
+
+<h1 id="rabbitmq-docker-실행">rabbitmq docker 실행</h1>
+
+<p>최신버전 부터 환경설정으로의 RABBITMQ_DEFAULT_USER, RABBITMQ_DEFAULT_PASS deprecate 되고 config 파일로 관리됨으로 안정화 후 변경 필요</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="se">\</span>
+<span class="nt">--name</span> rabbit-mq <span class="se">\</span>
+<span class="nt">--restart</span><span class="o">=</span>unless-stopped <span class="se">\</span>
+<span class="nt">-p</span> 15672:15672 <span class="se">\</span>
+<span class="nt">-p</span> 5672:5672 <span class="se">\</span>
+<span class="nt">-v</span> /home/rabbitmq/data:/var/lib/rabbitmq/ <span class="se">\</span>
+<span class="nt">-v</span> /home/rabbitmq/logs:/var/log/rabbitmq/ <span class="se">\</span>
+<span class="nt">-e</span> <span class="nv">RABBITMQ_DEFAULT_USER</span><span class="o">=</span>userName <span class="se">\</span>
+<span class="nt">-e</span> <span class="nv">RABBITMQ_DEFAULT_PASS</span><span class="o">=</span>password <span class="se">\</span>
+rabbitmq:3.8.17-management
+</code></pre></div></div>
+
+<h1 id="rabbitmq-management-web-접속">rabbitmq management web 접속</h1>
+
+<p class="desc-text">RabbitMQ web client 설정</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http://{host}:15672/
+</code></pre></div></div>
+
+<blockquote>
+  <h3 id="user-생성">User 생성</h3>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/docker/rabbitmq/Untitled.png" alt="rabbitmq user 생성" /></p>
+</blockquote>
+
+<blockquote>
+  <h3 id="virtual-hosts-생성">Virtual Hosts 생성</h3>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/docker/rabbitmq/Untitled1.png" alt="Virtual host 생성" /></p>
+</blockquote>
+
+<blockquote>
+  <h3 id="virtual-host-permission-부여">Virtual Host Permission 부여</h3>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/docker/rabbitmq/Untitled2.png" alt="Virtual Host Permission 부여" /></p>
+</blockquote>
+:ET

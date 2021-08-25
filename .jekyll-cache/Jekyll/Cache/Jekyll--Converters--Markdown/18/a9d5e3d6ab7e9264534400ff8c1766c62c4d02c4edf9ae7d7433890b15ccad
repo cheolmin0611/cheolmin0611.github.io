@@ -1,0 +1,333 @@
+I"�%<h1 id="-jenkins"><img src="/assets/images/icon/jenkins.png" alt="jenkins icon" class="icon-title" /> Jenkins</h1>
+
+<ul>
+  <li><a href="#jenkins-plugin-list">Jenkins plugin list</a></li>
+  <li><a href="#global-tool-configuration">Global Tool Configuration</a>
+    <ul>
+      <li><a href="#jdk-15">JDK-15</a></li>
+      <li><a href="#gradle">Gradle</a></li>
+      <li><a href="#nodejs">NodeJS</a></li>
+    </ul>
+  </li>
+  <li><a href="#java-server">Java Server</a>
+    <ul>
+      <li><a href="#general">General</a></li>
+      <li><a href="#소스-코드-관리">소스 코드 관리</a></li>
+      <li><a href="#빌드-유발">빌드 유발</a></li>
+      <li><a href="#빌드-환경">빌드 환경</a></li>
+      <li><a href="#build">Build</a>
+        <ul>
+          <li><a href="#gradle-1">Gradle</a></li>
+          <li><a href="#excute-shell">Excute shell</a></li>
+          <li><a href="#ssh-shell-command">SSH shell command</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#nodejs-1">NodeJS</a>
+    <ul>
+      <li><a href="#general-1">General</a></li>
+      <li><a href="#소스-코드-관리-1">소스 코드 관리</a></li>
+      <li><a href="#빌드-유발-1">빌드 유발</a></li>
+      <li><a href="#빌드-환경-1">빌드 환경</a></li>
+      <li><a href="#build-1">Build</a>
+        <ul>
+          <li><a href="#nodejs-2">NodeJS</a></li>
+          <li><a href="#excute-shell-1">Excute shell</a></li>
+          <li><a href="#ssh-shell-command-1">SSH shell command</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>jenkins</p>
+
+<h1 id="jenkins-plugin-list">Jenkins plugin list</h1>
+<p>jenkins로 gradle build와 docker image 생성을 위해 설치한 plugin 목록</p>
+
+<p><img src="/assets/images/views/devops/jenkins/Untitled.png" alt="jenkins plugin list" /></p>
+
+<ul>
+  <li>AnsiColor - console log 결과에 색상을 표시하기 위해</li>
+  <li>Gradle Plugin -  project의 gradle bulid</li>
+  <li>SSH Plugin - ssh excute shell 을 위한 plugin</li>
+  <li>NodeJS Plugin - node project build 및 배포</li>
+</ul>
+
+<h1 id="global-tool-configuration">Global Tool Configuration</h1>
+
+<blockquote>
+  <h3 id="jdk-15"><strong>JDK-15</strong></h3>
+  <p>linux binary 파일을 jenkins docker가 접근가능 한 경로로 copy</p>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/devops/jenkins/Untitled1.png" alt="/assets/images/views/devops/jenkins/Untitled1.png" /></p>
+</blockquote>
+
+<blockquote>
+  <h3 id="gradle"><strong>Gradle</strong></h3>
+  <p>현재 build 되고 있는 gradle 프로젝트의 version 설정</p>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/devops/jenkins/Untitled2.png" alt="/assets/images/views/devops/jenkins/Untitled2.png" /></p>
+</blockquote>
+
+<blockquote>
+  <h3 id="nodejs"><strong>NodeJS</strong></h3>
+  <p>현재 build 되고 있는 node 프로젝트의 version 설정</p>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/devops/jenkins/Untitled3.png" alt="/assets/images/views/devops/jenkins/Untitled3.png" /></p>
+</blockquote>
+
+<h1 id="java-server">Java Server</h1>
+<p>Freestyle project 생성</p>
+
+<p>Git source pull → gralde build → docker build → docker image push</p>
+
+<blockquote>
+  <h3 id="general"><strong>General</strong></h3>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/devops/jenkins/Untitled4.png" alt="/assets/images/views/devops/jenkins/Untitled4.png" /></p>
+</blockquote>
+
+<blockquote>
+  <p>build script 에서 사용되는 parameter</p>
+</blockquote>
+
+<blockquote>
+  <h3 id="소스-코드-관리"><strong>소스 코드 관리</strong></h3>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/devops/jenkins/Untitled5.png" alt="/assets/images/views/devops/jenkins/Untitled5.png" /></p>
+</blockquote>
+
+<blockquote>
+  <p>git source pull</p>
+</blockquote>
+
+<blockquote>
+  <h3 id="빌드-유발"><strong>빌드 유발</strong></h3>
+</blockquote>
+
+<blockquote>
+  <p>skip</p>
+</blockquote>
+
+<blockquote>
+  <h3 id="빌드-환경"><strong>빌드 환경</strong></h3>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/devops/jenkins/Untitled6.png" alt="/assets/images/views/devops/jenkins/Untitled6.png" /></p>
+</blockquote>
+
+<blockquote>
+  <p>consol log color 를 위한 ansi color 체크</p>
+</blockquote>
+
+<blockquote>
+  <h3 id="build"><strong>Build</strong></h3>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/devops/jenkins/Untitled7.png" alt="/assets/images/views/devops/jenkins/Untitled7.png" /></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3 id="gradle-1"><strong>Gradle</strong></h3>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="/assets/images/views/devops/jenkins/Untitled8.png" alt="/assets/images/views/devops/jenkins/Untitled8.png" /></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>gradle build - multi module project 이기 때문에 개별적으로 build 할 project 명 멍시</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>ex) clean build -b build.gradle -p <strong>makestar-user</strong></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3 id="excute-shell"><strong>Excute shell</strong></h3>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="/assets/images/views/devops/jenkins/Untitled9.png" alt="/assets/images/views/devops/jenkins/Untitled9.png" /></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Dockerfile 생성, CURRENT_COMMIT_VER 의 이름으로 docker image tag 명 지정</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3 id="ssh-shell-command"><strong>SSH shell command</strong></h3>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="/assets/images/views/devops/jenkins/Untitled10.png" alt="/assets/images/views/devops/jenkins/Untitled10.png" /></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>docker 로 운용되는 jenkins의 host 서버에서 docker image build, push</p>
+  </blockquote>
+</blockquote>
+
+<h1 id="nodejs-1">NodeJS</h1>
+<p>Nuxt  - Freestyle project 생성</p>
+
+<p>Git source pull → node version setting → npm build &amp; docker file → docker image push</p>
+
+<blockquote>
+  <h3 id="general-1">General</h3>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/devops/jenkins/Untitled11.png" alt="/assets/images/views/devops/jenkins/Untitled11.png" /></p>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/devops/jenkins/Untitled12.png" alt="/assets/images/views/devops/jenkins/Untitled12.png" /></p>
+</blockquote>
+
+<blockquote>
+  <p>build script 에서 사용되는 parameter</p>
+</blockquote>
+
+<blockquote>
+  <h3 id="소스-코드-관리-1">소스 코드 관리</h3>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/devops/jenkins/Untitled13.png" alt="/assets/images/views/devops/jenkins/Untitled13.png" /></p>
+</blockquote>
+
+<blockquote>
+  <p>git source pull</p>
+</blockquote>
+
+<blockquote>
+  <h3 id="빌드-유발-1">빌드 유발</h3>
+</blockquote>
+
+<blockquote>
+  <p>skip</p>
+</blockquote>
+
+<blockquote>
+  <h3 id="빌드-환경-1">빌드 환경</h3>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/devops/jenkins/Untitled14.png" alt="/assets/images/views/devops/jenkins/Untitled14.png" /></p>
+</blockquote>
+
+<blockquote>
+  <p>consol log color 를 위한 ansi color 체크</p>
+</blockquote>
+
+<blockquote>
+  <h3 id="build-1">Build</h3>
+</blockquote>
+
+<blockquote>
+  <p><img src="/assets/images/views/devops/jenkins/Untitled7.png" alt="/assets/images/views/devops/jenkins/Untitled7.png" /></p>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3 id="nodejs-2"><strong>NodeJS</strong></h3>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="/assets/images/views/devops/jenkins/Untitled15.png" alt="/assets/images/views/devops/jenkins/Untitled15.png" /></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>build 시 사용할 node 버전 명시</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3 id="excute-shell-1"><strong>Excute shell</strong></h3>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="/assets/images/views/devops/jenkins/Untitled16.png" alt="/assets/images/views/devops/jenkins/Untitled16.png" /></p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>Dockerfile 생성</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>echo “FROM node:14.16.1” &gt; Dockerfile</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p>echo “EXPOSE 9529” » Dockerfile</p>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <h3 id="ssh-shell-command-1"><strong>SSH shell command</strong></h3>
+  </blockquote>
+</blockquote>
+
+<blockquote>
+  <blockquote>
+    <p><img src="/assets/images/views/devops/jenkins/Untitled17.png" alt="/assets/images/views/devops/jenkins/Untitled17.png" /></p>
+  </blockquote>
+</blockquote>
+
+<h3 id="aws-설치-참고">AWS 설치 참고</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>aws s3 bucket 이전 build 버전 파일 삭제
+
+aws s3 <span class="nb">rm </span>s3://beatle-test/test/ <span class="nt">--recursive</span> <span class="nt">--exclude</span> <span class="s2">"</span><span class="si">$(</span><span class="nb">cat </span>previous.ver<span class="si">)</span><span class="s2">/*"</span>
+
+<span class="c"># docker 로 운용되는 jenkins의 host 서버에서 docker image build, push</span>
+</code></pre></div></div>
+:ET

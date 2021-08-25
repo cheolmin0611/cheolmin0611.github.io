@@ -6,12 +6,6 @@ description: "Just the Docs is a responsive Jekyll theme with built-in search th
 permalink: /
 ---
 
----
-# 한글 입력 테스트
-{: .fs-9 }
----
-
-
 # Focus on writing good documentation
 {: .fs-9 }
 
@@ -68,7 +62,7 @@ If you're hosting your site on GitHub Pages, [set up GitHub Pages and Jekyll loc
 
 ### Configure Just the Docs
 
-- [See configuration options]({{ site.baseurl }}{% link docs/configuration.md %})
+
 
 ---
 

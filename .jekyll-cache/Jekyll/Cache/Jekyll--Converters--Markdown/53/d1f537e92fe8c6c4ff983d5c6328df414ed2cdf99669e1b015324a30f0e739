@@ -1,0 +1,141 @@
+I"�<h1 id="-docker-설치"><img src="/assets/images/icon/docker.svg" alt="docker icon" class="icon-title" /> Docker 설치</h1>
+
+<ul>
+  <li><a href="#필수-패키지-설치">필수 패키지 설치</a></li>
+  <li><a href="#gpg-key-인증">GPG Key 인증</a></li>
+  <li><a href="#docker-repository-등록">docker repository 등록</a></li>
+  <li><a href="#apt-docker-설치">apt docker 설치</a></li>
+  <li><a href="#권한-설정">권한 설정</a></li>
+  <li><a href="#docker-private-registry-설정">docker private registry 설정</a>
+    <ul>
+      <li><a href="#docker-private-registry-설치">docker private registry 설치</a></li>
+      <li><a href="#docker-private-registry-연결-설정">docker private registry 연결 설정</a></li>
+      <li><a href="#docker-private-registry-repository-제거">docker private registry repository 제거</a></li>
+    </ul>
+  </li>
+  <li><a href="#docker-images">Docker Images</a>
+    <ul>
+      <li><a href="#docker-images">MySql</a></li>
+      <li><a href="#docker-images">GitLab</a></li>
+      <li><a href="#docker-images">Jenkins</a></li>
+      <li><a href="#docker-images">Redis</a></li>
+      <li><a href="#docker-images">RabbitMQ</a></li>
+      <li><a href="#docker-images">Elasticsearch</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p class="desc-text">Ubuntu 20.04 Docker 적용</p>
+
+<h1 id="필수-패키지-설치">필수 패키지 설치</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+</code></pre></div></div>
+
+<p><img src="/assets/images/views/docker/Untitled.png" alt="docker package install result" /></p>
+
+<h1 id="gpg-key-인증">GPG Key 인증</h1>
+
+<p class="desc-text">Docker의 GPG Key 인증</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl <span class="nt">-fsSL</span> https://download.docker.com/linux/ubuntu/gpg | <span class="nb">sudo </span>apt-key add -
+</code></pre></div></div>
+
+<p><img src="/assets/images/views/docker/Untitled1.png" alt="docker GPG key 인증" /></p>
+
+<h1 id="docker-repository-등록">docker repository 등록</h1>
+
+<p class="desc-text">아키텍쳐에 맞춰서 Docker repository를 등록</p>
+
+<p class="desc-text">아키텍쳐 확인을 원하시면 <strong>arch</strong> 명령어</p>
+
+<p><img src="/assets/images/views/docker/Untitled2.png" alt="cpu arch check" /></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>add-apt-repository <span class="se">\</span>
+<span class="s2">"deb [arch=amd64] https://download.docker.com/linux/ubuntu </span><span class="se">\</span><span class="s2">
+</span><span class="si">$(</span>lsb_release <span class="nt">-cs</span><span class="si">)</span><span class="s2"> </span><span class="se">\</span><span class="s2">
+stable"</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/views/docker/Untitled3.png" alt="docker repository regist" /></p>
+
+<h1 id="apt-docker-설치">apt docker 설치</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> docker-ce docker-ce-cli containerd.io
+</code></pre></div></div>
+
+<p><img src="/assets/images/views/docker/Untitled4.png" alt="docker apt install" /></p>
+
+<h1 id="권한-설정">권한 설정</h1>
+
+<p class="desc-text">현재 사용자에게 Docker에 대한 권한을 부여</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>usermod <span class="nt">-aG</span> docker <span class="nv">$USER</span>
+</code></pre></div></div>
+
+<p>$USER는 현재 사용자를 나타내는 환경 변수</p>
+
+<p>login 된 계정 exit 후 다시 접속 시 권한부여 완료</p>
+
+<h1 id="docker-private-registry-설정">docker private registry 설정</h1>
+
+<p class="desc-text">docker의 private repository를 설정</p>
+
+<h2 id="docker-private-registry-설치">docker private registry 설치</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">-i</span> <span class="nt">-t</span> <span class="nt">-p</span> 5000:5000 <span class="se">\</span>
+<span class="nt">-v</span> ~/docker/mount/registry/var/lib/registry/docker/registry:/var/lib/registry/docker/registry <span class="se">\</span>
+<span class="nt">--name</span> registry <span class="se">\</span>
+<span class="nt">--restart</span><span class="o">=</span>always registry
+</code></pre></div></div>
+
+<h2 id="docker-private-registry-연결-설정">docker private registry 연결 설정</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vi /etc/docker/daemon.json
+
+<span class="o">{</span>
+    <span class="s2">"insecure-registries"</span>: <span class="o">[</span><span class="s2">"10.10.0.141:5000"</span><span class="o">]</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>설정 적용을 위한 docker restart</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>service docker restart
+</code></pre></div></div>
+
+<h2 id="docker-private-registry-repository-제거">docker private registry repository 제거</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl -X GET http://10.10.0.141:5000/v2/_catalog 
+
+docker <span class="nb">exec</span> <span class="nt">-it</span> registry sh      <span class="o">=&gt;</span> registry container에 shell로 접속
+
+<span class="nb">cd</span> /var/lib/registry/docker/registry/v2
+<span class="nb">rm</span> <span class="nt">-rf</span> ./repositories/<span class="k">**</span>ubuntu<span class="k">**</span>/   <span class="o">=&gt;</span> 레파지토리 삭제
+<span class="nb">exit
+
+</span>docker <span class="nb">exec</span> <span class="nt">-it</span> registry  bin/registry garbage-collect  /etc/docker/registry/config.yml
+
+docker stop registry
+docker start registry
+</code></pre></div></div>
+
+<h1 id="docker-images">Docker Images</h1>
+
+<details>
+<summary>docker image list</summary>
+<div>
+
+    <hr />
+    <blockquote>
+      <h4 id="mysql"><img src="/assets/images/icon/mysql_original_logo_icon_146416.png" alt="mysql icon" class="icon-title" /> <a href="/docker/mysql">MySql</a></h4>
+      <h4 id="gitlab"><img src="/assets/images/icon/gitlab-icon-rgb.png" alt="gitlab icon" class="icon-title" /> <a href="/docker/gitlab">GitLab</a></h4>
+      <h4 id="jenkins"><img src="/assets/images/icon/jenkins.png" alt="jenkins icon" class="icon-title" /> <a href="/docker/jenkins">Jenkins</a></h4>
+      <h4 id="redis"><img src="/assets/images/icon/redis.png" alt="Redis icon" class="icon-title" /> <a href="/docker/redis">Redis</a></h4>
+      <h4 id="rabbitmq"><img src="/assets/images/icon/rabbitmq.png" alt="rabbitMQ icon" class="icon-title" /> <a href="/docker/rabbitmq">RabbitMQ</a></h4>
+      <h4 id="elasticsearch"><img src="/assets/images/icon/elastic-elasticsearch.png" alt="elasticsearch icon" class="icon-title" /> <a href="/docker/elasticsearch">Elasticsearch</a></h4>
+    </blockquote>
+
+  </div>
+</details>
+<hr />
+:ET

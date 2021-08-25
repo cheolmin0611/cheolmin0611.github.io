@@ -1,0 +1,13 @@
+.icon-title {
+  width: 2.5rem;
+  height: 2.7rem;
+}
+.icon-title img {
+    padding-top: 10px;
+}
+.desc-text {
+    color: gray;
+}
+.detail-list {
+  margin-top: 0px;
+}

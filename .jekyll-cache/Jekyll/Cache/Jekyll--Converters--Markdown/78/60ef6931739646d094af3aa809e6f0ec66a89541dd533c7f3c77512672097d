@@ -1,0 +1,21 @@
+I"�<h1 id="-jenkins"><img src="/assets/images/icon/jenkins.png" alt="jenkins icon" class="icon-title" /> Jenkins</h1>
+
+<ul>
+  <li><a href="#docker-run-명령어-실행">Docker run 명령어 실행</a></li>
+</ul>
+
+<p>jenkins</p>
+
+<h1 id="docker-run-명령어-실행">Docker run 명령어 실행</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">-i</span> <span class="nt">-t</span> <span class="se">\</span>
+<span class="nt">-v</span> ~/docker/mount/jenkins/var/jenkins_home:/var/jenkins_home <span class="se">\</span>
+<span class="nt">--env</span> <span class="nv">JENKINS_OPTS</span><span class="o">=</span><span class="s1">'--httpPort=50002'</span> <span class="se">\</span>
+<span class="nt">--env</span> <span class="nv">TZ</span><span class="o">=</span>Asia/Seoul <span class="se">\</span>
+<span class="nt">--network</span> host <span class="se">\</span>
+<span class="nt">--name</span> jenkins <span class="se">\</span>
+<span class="nt">--restart</span> always <span class="se">\</span>
+<span class="nt">-u</span> root <span class="se">\</span>
+jenkins/jenkins:lts
+</code></pre></div></div>
+:ET

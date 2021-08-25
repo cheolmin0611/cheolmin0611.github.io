@@ -1,0 +1,25 @@
+I"<h1 id="-redis"><img src="/assets/images/icon/redis.png" alt="redis icon" class="icon-title" /> Redis</h1>
+
+<ul>
+  <li><a href="#redis-docker-실행">redis docker 실행</a></li>
+  <li><a href="#redis-cli-실행">redis cli 실행</a></li>
+</ul>
+
+<p class="desc-text">Ubuntu 20.04 Docker로 적용</p>
+
+<h1 id="redis-docker-실행">redis docker 실행</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">-i</span> <span class="nt">-t</span> <span class="se">\</span>
+<span class="nt">-p</span> 6379:6379 <span class="se">\</span>
+<span class="nt">-v</span> ~/docker/mount/redis/data:/data <span class="se">\</span>
+<span class="nt">--name</span> redis <span class="nt">--restart</span> always <span class="se">\</span>
+redis redis-server <span class="nt">--appendonly</span> <span class="nb">yes</span>
+</code></pre></div></div>
+
+<h1 id="redis-cli-실행">redis cli 실행</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-it</span> <span class="nt">--rm</span> <span class="se">\</span>
+<span class="nt">--net</span> host <span class="se">\</span>
+redis redis-cli <span class="nt">-p</span> 6379
+</code></pre></div></div>
+:ET

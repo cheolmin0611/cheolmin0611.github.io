@@ -1,0 +1,23 @@
+I"y<h1 id="-kubernetes---kubeadm-인증서"><img src="/assets/images/icon/certificate-icon-png-10319.png" alt="certificate icon" class="icon-title" /> kubernetes - kubeadm 인증서</h1>
+
+<ul>
+  <li><a href="#인증서-확인">인증서 확인</a></li>
+  <li><a href="#인증서-갱신">인증서 갱신</a></li>
+</ul>
+
+<h1 id="인증서-확인">인증서 확인</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>kubeadm certs check-expiration
+</code></pre></div></div>
+<p>/assets/images/views/kubernetes/kubeadm-certificate/
+<img src="/assets/images/views/kubernetes/kubeadm-certificate/Untitled.png" alt="certificate check" /></p>
+
+<h1 id="인증서-갱신">인증서 갱신</h1>
+
+<p>CERTIFICATE AUTHORITY 파일들은 갱신이 되지 않음 - 기간이 10년임…</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>kubeadm certs renew all
+</code></pre></div></div>
+
+<p><img src="/assets/images/views/kubernetes/kubeadm-certificate/Untitled1.png" alt="certificate renew all" /></p>
+:ET

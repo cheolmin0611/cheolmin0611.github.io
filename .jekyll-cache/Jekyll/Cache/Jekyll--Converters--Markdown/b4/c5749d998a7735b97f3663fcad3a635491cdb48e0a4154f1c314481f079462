@@ -1,0 +1,102 @@
+I"�<h1 id="-gitlab"><img src="/assets/images/icon/gitlab-icon-rgb.png" alt="gitlab icon" class="icon-title" /> GitLab</h1>
+
+<ul>
+  <li><a href="#docker-run-명령어-실행">Docker run 명령어 실행</a></li>
+  <li><a href="#gitlab-runner-설치">Gitlab runner 설치</a></li>
+</ul>
+
+<p class="desc-text">Ubuntu 20.04 Docker로 적용</p>
+
+<h1 id="docker-run-명령어-실행">Docker run 명령어 실행</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">-p</span> <span class="k">**</span>50001<span class="k">**</span>:<span class="k">**</span>50001<span class="k">**</span> <span class="se">\</span>
+<span class="nt">--name</span> gitlab <span class="se">\</span>
+<span class="nt">--restart</span> always <span class="se">\</span>
+<span class="nt">-v</span> ~/docker/mount/gitlab/etc/gitlab:/etc/gitlab <span class="se">\</span>
+<span class="nt">-v</span> ~/docker/mount/gitlab/var/log/gitlab:/var/log/gitlab <span class="se">\</span>
+<span class="nt">-v</span> ~/docker/mount/gitlab/var/opt/gitlab:/var/opt/gitlab <span class="se">\</span>
+gitlab/gitlab-ce
+
+</code></pre></div></div>
+
+<p>/etc/gitlab/gitlab.rb  파일의 포트를 80 에서 위에 기입한 50001 로 변경</p>
+
+<p>external_url ‘<a href="http://10.10.0.141:50001/"><strong>http://10.10.0.141:50001</strong></a>’</p>
+
+<p>컨테이너 안에서 실행</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>gitlab-ctl reconfigure
+<span class="nb">sudo </span>gitlab-ctl restart
+</code></pre></div></div>
+
+<p>registry_external_url ‘<a href="http://10.10.0.141:50001/"><strong>http://10.10.0.141:5000</strong></a>’ — 이건 안해도 됨</p>
+
+<p>컨테이너 안에서 실행</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>gitlab-ctl reconfigure
+<span class="nb">sudo </span>gitlab-ctl restart
+</code></pre></div></div>
+
+<p>root user의 비밀번호와 id를 찾고 싶은 경우</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># container 안에서...</span>
+gitlab-rails console <span class="nt">-e</span> production
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>user <span class="o">=</span> User.where<span class="o">(</span><span class="nb">id</span>:1<span class="o">)</span>.first
+user.password<span class="o">=</span><span class="s1">'1q2w3e4r'</span>
+user.password_confirmation<span class="o">=</span><span class="s1">'1q2w3e4r'</span>
+</code></pre></div></div>
+
+<p><img src="/assets/images/views/docker/gitlab/Untitled.png" alt="gitlab root user password find" /></p>
+
+<h1 id="gitlab-runner-설치">Gitlab runner 설치</h1>
+
+<p class="desc-text">pipeline을 사용하기 위해 gitlab runner 를 docker 로 설치 한다</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">--name</span> gitlab-runner <span class="nt">--restart</span> always <span class="se">\</span>
+  <span class="nt">--net</span><span class="o">=</span>host <span class="se">\</span>
+  <span class="nt">-v</span> /srv/gitlab-runner/config:/etc/gitlab-runner <span class="se">\</span>
+  <span class="nt">-v</span> /var/run/docker.sock:/var/run/docker.sock <span class="se">\</span>
+  gitlab/gitlab-runner:latest
+</code></pre></div></div>
+
+<p><a href="http://10.10.0.141:50001/admin/runners">http://[git_external_url]/admin/runners</a></p>
+
+<p>gitlab-ce 주소로 이동</p>
+
+<p>docker container 에서 gitab-runner 등록</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker <span class="nb">exec</span> <span class="nt">-ti</span> gitlab-runner bash
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>root@48aea5eded7e:/# gitlab-runner register
+
+Runtime platform                                    arch=amd64 os=linux pid=249 revision=a987417a version=12.2.0
+Running in system-mode.
+
+Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com/):
+https://mydomain.com
+
+Please enter the gitlab-ci token for this runner:
+&lt;&lt;your gitlab ci token here&gt;&gt;
+
+Please enter the gitlab-ci description for this runner:
+[48aea5eded7e]: sample-docker-runner
+
+Please enter the gitlab-ci tags for this runner (comma separated):
+docker (whatever you need)
+Registering runner... succeeded                     runner=4usxjjv2
+
+Please enter the executor: custom, docker-ssh, parallels, shell, docker+machine, docker, ssh, virtualbox, docker-ssh+machine, kubernetes:
+docker
+
+Please enter the default Docker image (e.g. ruby:2.6):
+alpine:latest
+Runner registered successfully. Feel free to start it, but if it's running already the config should be automatically reloaded!
+
+root@48aea5eded7e:/#
+</code></pre></div></div>
+
+<p><a href="https://bravenamme.github.io/2020/11/09/gitlab-runner/">https://bravenamme.github.io/2020/11/09/gitlab-runner/</a></p>
+:ET

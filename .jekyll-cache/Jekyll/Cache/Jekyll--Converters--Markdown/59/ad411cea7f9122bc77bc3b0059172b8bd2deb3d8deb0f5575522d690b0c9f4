@@ -1,0 +1,48 @@
+I"k<h1 id="-mysql"><img src="/assets/images/icon/mysql_original_logo_icon_146416.png" alt="mysql icon" class="icon-title" /> MySql</h1>
+
+<ul>
+  <li><a href="#docker-run-명령어-실행">Docker run 명령어 실행</a></li>
+</ul>
+
+<p class="desc-text">Ubuntu 20.04 Docker로 적용</p>
+
+<h1 id="docker-run-명령어-실행">Docker run 명령어 실행</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run <span class="nt">-d</span> <span class="nt">-p</span> 3306:3306 <span class="nt">-i</span> <span class="nt">-t</span> <span class="se">\</span>
+<span class="nt">-e</span> <span class="nv">MYSQL_ROOT_PASSWORD</span><span class="o">=</span>1q2w3e4r <span class="se">\</span>
+<span class="nt">-v</span> /home/makestar/docker/mount/mysql/var/lib/mysql:/var/lib/mysql <span class="se">\</span>
+<span class="nt">-v</span> /home/makestar/docker/mount/mysql/etc/mysql:/etc/mysql <span class="se">\</span>
+<span class="nt">-v</span> /home/makestar/docker/mount/mysql/var/lib/mysql-files:/var/lib/mysql-files/ <span class="se">\</span>
+<span class="nt">--name</span> mysql <span class="nt">--restart</span> always mysql:latest
+</code></pre></div></div>
+
+<p>db 및 유저 생성</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">create</span> <span class="k">database</span> <span class="n">test_db</span> <span class="nb">character</span> <span class="k">set</span> <span class="n">utf8mb4</span> <span class="k">collate</span> <span class="n">utf8mb4_general_ci</span><span class="p">;</span>
+
+<span class="k">create</span> <span class="k">user</span> <span class="n">test_user</span><span class="o">@</span><span class="s1">'%'</span> <span class="n">identified</span> <span class="k">by</span> <span class="s1">'testPass!'</span><span class="p">;</span>
+
+<span class="k">grant</span> <span class="k">all</span> <span class="k">privileges</span> <span class="k">on</span> <span class="n">test_db</span><span class="p">.</span><span class="o">*</span> <span class="k">to</span> <span class="n">test_user</span><span class="o">@</span><span class="s1">'%'</span><span class="p">;</span>
+
+<span class="n">flush</span> <span class="k">privileges</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>my.cnf 설정</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>vi /home/makestar/docker/mount/mysql/etc/mysql/my.cnf
+</code></pre></div></div>
+
+<p>my.cnf 파일 내용 -  docker 재시작 해야 적용</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>mysqld]
+sort_buffer_size <span class="o">=</span> 256K         <span class="c"># (인덱스를 사용할 수 없는) 정렬에 필요한 버퍼의 크기, ORDER BY 또는 GROUP BY 연산 속도와 관련</span>
+join_buffer_size <span class="o">=</span> 256K         <span class="c"># 조인이 테이블을 풀스캔 하기 위해 사용하는 버퍼크기, 드리븐 테이블이 FULL SCAN할 때 사용됨</span>
+read_buffer_size <span class="o">=</span> 256K         <span class="c"># 테이블 스캔에 필요한 버퍼크기</span>
+read_rnd_buffer_size <span class="o">=</span> 256K     <span class="c"># 디스크 검색을 피하기위한 랜덤 읽기 버퍼크기, 정렬 대상이 커서 two pass 알고리즘을 쓸 때만 사용</span>
+
+<span class="nv">long_query_time</span><span class="o">=</span>1 <span class="c"># 쿼리 응답 시간이 1초 이상일 경우</span>
+slow_query_log <span class="o">=</span> 1 <span class="c"># Slow Query Log 설정 ON</span>
+<span class="c"># slow_query_log_file = /var/log/mysql/mysql_slow.log # 로그 저장 경로  </span>
+<span class="c"># show variables like 'slow_query_%'; 로 default 로그 경로를 알 수 있다.</span>
+</code></pre></div></div>
+:ET

@@ -1,0 +1,323 @@
+I"�?<h1 id="-kubernetes-설치"><img src="/assets/images/icon/Kubernetes_Logo_Hrz_lockup_REV1.png" alt="kubernetes icon" class="icon-title" /> Kubernetes 설치</h1>
+
+<ul>
+  <li><a href="#ㅑnstalling-kubeadm-kubelet-and-kubectl">Installing kubeadm, kubelet and kubectl</a>
+    <ul>
+      <li><a href="#-docker-설치">Docker 설치</a></li>
+    </ul>
+  </li>
+  <li><a href="#kubeadm-init-실행">kubeadm init 실행</a></li>
+  <li><a href="#kubernetes-dashboard-설치">kubernetes dashboard 설치</a>
+    <ul>
+      <li><a href="#dashboard-기동-방법">dashboard 기동 방법</a></li>
+    </ul>
+  </li>
+  <li><a href="#kubernetes-dashboard---metrics-server-설치">kubernetes dashboard - (metrics server) 설치</a>
+    <ul>
+      <li><a href="#-certificate">Certificate</a></li>
+    </ul>
+  </li>
+</ul>
+
+<p class="desc-text">Ubuntu 20.04 Docker 적용</p>
+
+<h1 id="installing-kubeadm-kubelet-and-kubectl">Installing kubeadm, kubelet and kubectl</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-get update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> apt-transport-https curl
+
+curl <span class="nt">-s</span> https://packages.cloud.google.com/apt/doc/apt-key.gpg | <span class="nb">sudo </span>apt-key add -
+
+<span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh"> | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+</span><span class="no">EOF
+
+</span><span class="nb">sudo </span>apt-get update
+
+<span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> kubelet kubeadm kubectl
+
+<span class="nb">sudo </span>apt-mark hold kubelet kubeadm kubectl
+</code></pre></div></div>
+
+<h4 id="-docker-설치"><img src="/assets/images/icon/docker.svg" alt="docker icon" class="icon-title" /> <a href="/docker">Docker 설치</a></h4>
+
+<h1 id="kubeadm-init-실행">kubeadm init 실행</h1>
+
+<p class="desc-text">apiserver-advertise-address 에는 ifconfig 나오는 ens5 마스터 노드의 ip를 적는다</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># images pull 후에 실행</span>
+<span class="nb">sudo </span>kubeadm config images pull
+
+<span class="nb">sudo </span>kubeadm init <span class="nt">--pod-network-cidr</span><span class="o">=</span>10.244.0.0/16 <span class="nt">--apiserver-advertise-address</span><span class="o">=</span>10.10.0.151
+</code></pre></div></div>
+
+<p class="desc-text">– woker node 에 적용될 결과</p>
+
+<p class="desc-text">sudo kubeadm join –node-name node-worker-01 10.10.0.154:6443 –token k7z4hy.5f47ac9h5bmpwikn –discovery-token-ca-cert-hash sha256:d99f25181a5581a74b8fa319f2caa16635923b247493ae87b9dc12f801c9f204</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># token 만료이후 다시 조회 생성 하는 command</span>
+<span class="c"># 1) 토큰을 모를 경우</span>
+<span class="nb">sudo </span>kubeadm token list
+<span class="c"># 2) 토큰이 없는 경우 (기본 24시간 후 삭제)</span>
+<span class="nb">sudo </span>kubeadm token create
+<span class="c"># 3) --discovery-token-ca-cert-hash를 모를 경우</span>
+openssl x509 <span class="nt">-pubkey</span> <span class="nt">-in</span> /etc/kubernetes/pki/ca.crt | openssl rsa <span class="nt">-pubin</span> <span class="nt">-outform</span> der 2&gt;/dev/null | openssl dgst <span class="nt">-sha256</span> <span class="nt">-hex</span> | <span class="nb">sed</span> <span class="s1">'s/^.* //'</span>
+</code></pre></div></div>
+
+<p>node에서 master 에 join후에 node에 taint 를 주려고 하는 경우</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># taint 추가</span>
+kubectl taint node node-worker-1 <span class="nv">key1</span><span class="o">=</span>value1:NoSchedule
+
+<span class="c"># taint 제거</span>
+kubectl taint nodes node-worker-1 key1-
+</code></pre></div></div>
+
+<p>셋업한 클러스터 사용 명령어</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nv">$HOME</span>/.kube
+<span class="nb">sudo cp</span> <span class="nt">-i</span> /etc/kubernetes/admin.conf <span class="nv">$HOME</span>/.kube/config
+<span class="nb">sudo chown</span> <span class="si">$(</span><span class="nb">id</span> <span class="nt">-u</span><span class="si">)</span>:<span class="si">$(</span><span class="nb">id</span> <span class="nt">-g</span><span class="si">)</span> <span class="nv">$HOME</span>/.kube/config
+</code></pre></div></div>
+
+<p>해당 명령어는 Root 계정이 아닌 다른 사용자 계정에서 kubectl 커맨드 명령어를 사용하여 클러스터를 제어하기 위해 사용하는 명령어이다.</p>
+
+<p class="desc-text"><br />
+만약 다른 컴퓨터에서 kubectl을 사용하여 클러스터와 통신하고 싶다면 아래와 같이 admin.conf 파일을 마스터 노드에서 복사해와서 kubectl –kubeconfig 명령어를 통해 가능하다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scp ubuntu@&lt;마스터 노드 IP&gt;:/etc/kubernetes/admin.conf <span class="nb">.</span>
+kubectl <span class="nt">--kubeconfig</span> ./admin.conf get nodes
+</code></pre></div></div>
+
+<p class="desc-text">또한 클러스터 외부에서 마스터 노드의 API 서버에 연결하고 싶다면 아래와 같이 <code class="language-plaintext highlighter-rouge">kubectl proxy</code> 명령어를 사용할 수 있다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>scp ubuntu@&lt;마스터 노드 IP&gt;:/etc/kubernetes/admin.conf <span class="nb">.</span>
+kubectl <span class="nt">--kubeconfig</span> ./admin.conf proxy
+</code></pre></div></div>
+
+<p>그 다음은 우리가 사용할 Pod 네트워크 애드온(Flannel)을 사용하기 위해 아래의 명령어를 통해 Pod 네트워크를 클러스터에 배포한다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+</code></pre></div></div>
+
+<p class="desc-text">10.0.0.0/8 대역의 방화벽을 열어놔야함 - kubeadm init 시에 10.244.0.0/16 대역을 사용하기 때문에 각 node 간 방화벽이 동작하지 않도록 주의</p>
+
+<p class="desc-text">flannel 설정시 하단의 메시지가 나오는건 위의 셋업한 클러스터 사용 명령어 를 적용하지 않아서이다.</p>
+
+<p class="desc-text">The connection to the server localhost:8080 was refused - did you specify the right host or port?</p>
+
+<h1 id="kubernetes-dashboard-설치">kubernetes dashboard 설치</h1>
+
+<p>출처 <a href="https://waspro.tistory.com/516">https://waspro.tistory.com/516</a></p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
+</code></pre></div></div>
+
+<p>kubernetes 확인</p>
+
+<p><img src="/assets/images/views/kubernetes/Untitled.png" alt="kubernetes 확인" />
+<br />
+<br /></p>
+
+<h3 id="dashboard-기동-방법">dashboard 기동 방법</h3>
+
+<ul>
+  <li><strong>Proxy를 이용하는 방법</strong></li>
+  <li><strong>NodePort를 이용하는 방법</strong></li>
+  <li><strong>API Server를 이용하는방법</strong></li>
+</ul>
+
+<p><br />
+ <strong>API Server 이용 방법</strong> - dashboard 기동 방법 중 API Server 를 이용하는 방법으로 진행</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">grep</span> <span class="s1">'client-certificate-data'</span> ~/.kube/config | <span class="nb">head</span> <span class="nt">-n</span> 1 | <span class="nb">awk</span> <span class="s1">'{print $2}'</span> | <span class="nb">base64</span> <span class="nt">-d</span> <span class="o">&gt;&gt;</span> kubecfg.crt
+
+<span class="nb">grep</span> <span class="s1">'client-key-data'</span> ~/.kube/config | <span class="nb">head</span> <span class="nt">-n</span> 1 | <span class="nb">awk</span> <span class="s1">'{print $2}'</span> | <span class="nb">base64</span> <span class="nt">-d</span> <span class="o">&gt;&gt;</span> kubecfg.key
+</code></pre></div></div>
+
+<p><br />
+다음으로 생성한 키를 기반으로 p12 인증서 파일을 생성합니다. -  브라우저에 개별로 등록</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>openssl pkcs12 <span class="nt">-export</span> <span class="nt">-clcerts</span> <span class="nt">-inkey</span> kubecfg.key <span class="nt">-in</span> kubecfg.crt <span class="nt">-out</span> kubecfg.p12 <span class="nt">-name</span> <span class="s2">"kubernetes-admin"</span>
+
+Enter Export Password:
+Verifying - Enter Export Password:
+
+<span class="nb">ls</span> <span class="nt">-la</span> kubecfg.p12
+<span class="nt">-rw-r--r--</span> 1 root root 3262 Aug  3 22:49 kubecfg.p12
+
+</code></pre></div></div>
+
+<p class="desc-text"><strong>kubecfg.p12, /etc/kubernetes/pki/ca.crt</strong> 인증서 client pc 로 copy</p>
+<p class="desc-text">ca.crt 는 동일한 이름으로 기관이 등록되어 있어 여러개 띄울때 에러 발생</p>
+
+<p><br />
+<br />
+ca.crt 인증서 root에 전역으로 설치 - ca.crt 는 등록하지 않아도 사용 가능</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo mkdir</span> /usr/share/ca-certificates/extra
+
+<span class="nb">sudo cp </span>ca.crt /usr/share/ca-certificates/extra/
+
+<span class="nb">sudo </span>dpkg-reconfigure ca-certificates
+
+</code></pre></div></div>
+
+<p><br />
+master 쪽에서 해당 명령어로 token get  - 하단의 kubernetes login 인증키 생성을 실행후 해야한다</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nt">-n</span> kube-system describe secret <span class="si">$(</span>kubectl <span class="nt">-n</span> kube-system get secret | <span class="nb">grep </span>admin-user | <span class="nb">awk</span> <span class="s1">'{print $1}'</span><span class="si">)</span>
+</code></pre></div></div>
+
+<p><br />
+<br /></p>
+<ul>
+  <li>
+    <p><strong>Kubernetes Login 인증키 생성</strong></p>
+  </li>
+  <li>
+    <p>Kubernetes는 접속방법 </p>
+    <ul>
+      <li>kubeconfig</li>
+      <li>Token</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br />
+<strong>Token 방식 적용</strong></p>
+
+<ul>
+  <li>serviceaccount, clusterrolebinding 생성</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vi eks-admin-service-account.yaml
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kube-system
+<span class="nt">---</span>
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kube-system
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 적용
+kubectl apply <span class="nt">-f</span> eks-admin-service-account.yaml
+
+// 삭제
+kubectl delete <span class="nt">-f</span> eks-admin-service-account.yaml
+</code></pre></div></div>
+
+<p><br />
+<br /></p>
+<ul>
+  <li><del>serviceaccount를 생성</del></li>
+  <li>하단 코드 사용하지 않음</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh"> | kubectl create -f -
+ apiVersion: v1
+ kind: ServiceAccount
+ metadata:
+   name: admin-user
+   namespace: kube-system
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<p><br />
+<br /></p>
+<ul>
+  <li><del>ClusterRoleBinding을 생성</del></li>
+  <li>하단 코드 사용하지 않음</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> <span class="o">&lt;&lt;</span><span class="no">EOF</span><span class="sh"> | kubectl create --validate=false -f -
+ apiVersion: rbac.authorization.k8s.io/v1
+ kind: ClusterRoleBinding
+ metadata:
+   name: admin-user
+ roleRef:
+   apiGroup: rbac.authorization.k8s.io
+   kind: ClusterRole
+   name: cluster-admin
+ subjects:
+ - kind: ServiceAccount
+   name: admin-user
+   namespace: kube-system
+</span><span class="no">EOF
+</span></code></pre></div></div>
+
+<p><br /></p>
+<ul>
+  <li>사용자 계정의 토큰을 가져와서 대시보드에 입력합니다.</li>
+</ul>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl <span class="nt">-n</span> kube-system describe secret <span class="si">$(</span>kubectl <span class="nt">-n</span> kube-system get secret | <span class="nb">grep </span>admin-user | <span class="nb">awk</span> <span class="s1">'{print $1}'</span><span class="si">)</span>
+
+Name:         admin-user-token-p9ldd
+Namespace:    kube-system
+Labels:       &lt;none&gt;
+Annotations:  kubernetes.io/service-account.name<span class="o">=</span>admin-user
+              kubernetes.io/service-account.uid<span class="o">=</span>041cb7ec-946a-49b6-8900-6dc90fc08464
+
+Type:  kubernetes.io/service-account-token
+
+Data
+<span class="o">====</span>
+ca.crt:     1025 bytes
+namespace:  11 bytes
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3Vu
+</code></pre></div></div>
+
+<p><br />
+브라우저에 인증서 개인용, 신뢰할수 있는 기관 인증서 등록 후 실행하면 열림</p>
+
+<p>https://[master_ip]:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login</p>
+
+<h4 id="-elasticsearch"><img src="/assets/images/icon/elastic-elasticsearch.png" alt="elasticsearch icon" class="icon-title" /> <a href="/docker/elasticsearch">Elasticsearch</a></h4>
+
+<h1 id="kubernetes-dashboard---metrics-server-설치">kubernetes dashboard - (metrics server) 설치</h1>
+
+<p>cpu, memory usage 를 확인하려면 metrics server 가 설치되어야한다</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>kubectl apply <span class="nt">-f</span> https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+</code></pre></div></div>
+
+<p>참고: <a href="https://kangwoo.github.io/devops/kubernetes/kubernetes-metrics-server-install/">https://kangwoo.github.io/devops/kubernetes/kubernetes-metrics-server-install/</a></p>
+
+<p><br />
+deployments 에 수정 tolerations 에 선언할게 있다면 추가해야한다</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>schedulerName: default-scheduler
+tolerations:
+- key: [node-role.kubernetes.io/master](http://node-role.kubernetes.io/master)
+effect: NoSchedule
+- key: key
+operator: Equal
+value: api
+effect: NoSchedule
+</code></pre></div></div>
+
+<p>deployments 에 수정 - ‘–kubelet-insecure-tls’</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>args:
+- '--cert-dir=/tmp'
+- '--secure-port=4443'
+- '--kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname'
+- '--kubelet-use-node-status-port'
+- '--kubelet-insecure-tls'
+</code></pre></div></div>
+
+<h4 id="-kubernetes---kubeadm-인증서"><img src="/assets/images/icon/certificate-icon-png-10319.png" alt="certificate icon" class="icon-title" /> <a href="/kuebernetes/kubeadm-certificate">kubernetes - kubeadm 인증서</a></h4>
+:ET
