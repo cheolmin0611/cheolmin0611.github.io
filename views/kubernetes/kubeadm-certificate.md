@@ -2,7 +2,7 @@
 layout: views
 title: Kubeadm-certificate
 parent: kubernetes
-nav_order: 
+nav_order: 1
 permalink: /kubernetes/kubeadm-certificate
 ---
 

@@ -51,7 +51,7 @@ service xrdp start
 sudo vi /etc/xrdp/xrdp.ini
 ```
 
-참고 - [https://ko.linux-console.net/?p=393](https://ko.linux-console.net/?p=393)
+참고 - [https://ko.linux-console.net/?p=393](https://ko.linux-console.net/?p=393){:target="_blank"}
 
 ## 2-2. Client
 

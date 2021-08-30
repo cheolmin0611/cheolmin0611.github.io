@@ -11,4 +11,7 @@ permalink: /ubuntu
 # [Remmina](/ubuntu/remmina)
 SSH, RDP(Reomote Desktop Protocol), SFTP 등 연결 관리 프로그램
 
+# [Multipass](/ubuntu/multipass)
+LXD를 이용한 가상환경 구축
+
 ---

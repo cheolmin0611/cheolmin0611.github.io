@@ -125,7 +125,7 @@ The connection to the server localhost:8080 was refused - did you specify the ri
 
 # kubernetes dashboard 설치
 
-출처 [https://waspro.tistory.com/516](https://waspro.tistory.com/516)
+출처 [https://waspro.tistory.com/516](https://waspro.tistory.com/516){:target="_blank"}
 
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
@@ -308,7 +308,7 @@ cpu, memory usage 를 확인하려면 metrics server 가 설치되어야한다
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 ```
 
-참고: [https://kangwoo.github.io/devops/kubernetes/kubernetes-metrics-server-install/](https://kangwoo.github.io/devops/kubernetes/kubernetes-metrics-server-install/)
+참고: [https://kangwoo.github.io/devops/kubernetes/kubernetes-metrics-server-install/](https://kangwoo.github.io/devops/kubernetes/kubernetes-metrics-server-install/){:target="_blank"}
 
 <br/>
 deployments 에 수정 tolerations 에 선언할게 있다면 추가해야한다
@@ -337,3 +337,4 @@ args:
 ```
 
 #### ![certificate icon](/assets/images/icon/certificate-icon-png-10319.png){:class="icon-title"} [kubernetes - kubeadm 인증서](/kuebernetes/kubeadm-certificate)
+#### ![nginx ingress controller icon](/assets/images/icon/nginx-ingress-controller.png){:class="icon-title"} [nginx - ingress -controller](/kuebernetes/nginx-ingress-controller)

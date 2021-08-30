@@ -75,7 +75,7 @@ docker run -d --name gitlab-runner --restart always \
   gitlab/gitlab-runner:latest
 ```
 
-[http://[git_external_url]/admin/runners](http://10.10.0.141:50001/admin/runners) 
+[http://[git_external_url]/admin/runners](http://10.10.0.141:50001/admin/runners) {:target="_blank"}
 
 gitlab-ce 주소로 이동
 
@@ -114,4 +114,4 @@ Runner registered successfully. Feel free to start it, but if it's running alrea
 root@48aea5eded7e:/#
 ```
 
-[https://bravenamme.github.io/2020/11/09/gitlab-runner/](https://bravenamme.github.io/2020/11/09/gitlab-runner/)
+[https://bravenamme.github.io/2020/11/09/gitlab-runner/](https://bravenamme.github.io/2020/11/09/gitlab-runner/){:target="_blank"}
