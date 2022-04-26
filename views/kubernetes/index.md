@@ -8,7 +8,7 @@ permalink: /kubernetes
 
 # ![kubernetes icon](/assets/images/icon/Kubernetes_Logo_Hrz_lockup_REV1.png){:class="icon-title"} Kubernetes 설치
 
-* [Installing kubeadm, kubelet and kubectl](#ㅑnstalling-kubeadm-kubelet-and-kubectl)
+* [Installing kubeadm, kubelet and kubectl](#installing-kubeadm-kubelet-and-kubectl)
     * [Docker 설치](#-docker-설치)
 * [kubeadm init 실행](#kubeadm-init-실행)
 * [kubernetes dashboard 설치](#kubernetes-dashboard-설치)
