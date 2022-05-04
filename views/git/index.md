@@ -48,4 +48,11 @@ git branch --delete feature-01
 git push origin :feature-01
 ```
 
+## commit message 변경(push 이전)
+---
+
+```bash
+git commit --amend -m "바꿀 메시지"
+```
+
 ---
